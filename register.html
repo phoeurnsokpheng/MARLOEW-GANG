@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | GTA V Teammate</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .btn-submit:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <header class="glass-header">
+        <div class="logo">Marlowe <span>Valley</span> </div>
+        <nav><a href="index.html" class="back-link"><i class="fas fa-chevron-left"></i> BACK TO HOME</a></nav>
+    </header>
+
+    <section class="container">
+        <div class="register-card">
+            <div class="card-header">
+                <h2>Teammate Registration</h2>
+                <p>Fill out the form to join the squad.</p>
+            </div>
+            
+            <form id="registrationForm">
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="name" placeholder="Enter your real name" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="phone" placeholder="e.g. +1 234 567 890" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="discord">Discord Username</label>
+                    <i class="fab fa-discord"></i>
+                    <input type="text" id="discord" placeholder="username#0000" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="gtaname">GTA V Name (Social Club)</label>
+                    <i class="fas fa-gamepad"></i>
+                    <input type="text" id="gtaname" placeholder="Your Rockstar ID" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="role">Register For</label>
+                    <i class="fas fa-users"></i>
+                    <select id="role" required>
+                        <option value="" disabled selected>Select a faction</option>
+                        <option value="Gang">Gang</option>
+                        <option value="Police">Police</option>
+                        <option value="General Member">General Member</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">SUBMIT APPLICATION</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 GTA V Teammate Finder.</p>
+    </footer>
+
+    <script>
+        const BOT_TOKEN = "8343485371:AAHUzwUW9flKScXHnLvpQO_wPjopAo9nOWc";
+        const CHAT_ID = "-1003463022443"; 
+
+        const registrationForm = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        registrationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            submitBtn.innerText = "SENDING...";
+            submitBtn.disabled = true;
+
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const discord = document.getElementById('discord').value;
+            const gtaname = document.getElementById('gtaname').value;
+            const role = document.getElementById('role').value;
+
+            const message = `🚀 *New Application Received!*\n\n` +
+                            `👤 *Name:* ${name}\n` +
+                            `📱 *Phone:* ${phone}\n` +
+                            `👾 *Discord:* ${discord}\n` +
+                            `🎮 *GTA ID:* ${gtaname}\n` +
+                            `🚩 *Faction:* ${role}\n\n` +
+                            `📅 *Date:* ${new Date().toLocaleString()}`;
+
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+            const data = {
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'Markdown'
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "success.html";
+                } else {
+                    throw new Error('Failed to send');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Oops! Something went wrong. Please check your internet or try again later.");
+                
+                submitBtn.innerText = "SUBMIT APPLICATION";
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
